@@ -30,17 +30,29 @@ export function Hero() {
   const targetTimeRef = useRef(0);
   const [videoReady, setVideoReady] = useState(false);
   const [videoMissing, setVideoMissing] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+
+  // Touch devices (iPad, phones) get a tighter spring: their momentum scroll
+  // is already smooth, so the default settling tail just keeps firing video
+  // seeks after the finger lifts — which on iPad's slower decoder reads as lag.
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(hover: none) and (pointer: coarse)");
+    const update = () => setIsTouch(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
-  // Smooth the scroll value so video scrubbing doesn't jitter
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 110,
-    damping: 26,
-    mass: 0.35,
+    stiffness: isTouch ? 260 : 110,
+    damping: isTouch ? 44 : 26,
+    mass: isTouch ? 0.15 : 0.35,
   });
 
   // Headline rises and slightly fades as you scroll into the splash
@@ -108,7 +120,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[280vh] bg-[var(--color-hero-bg)]"
+      className="relative h-[180vh] sm:h-[210vh] lg:h-[280vh] bg-[var(--color-hero-bg)]"
       aria-label="Liva Cafe — die Eiswürfel-Sequenz"
     >
       {/* Sticky stage. Bg matches the video so any micro-gap or pre-paint
