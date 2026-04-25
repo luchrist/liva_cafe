@@ -86,12 +86,20 @@ export function Hero() {
         v.currentTime = 0;
       } catch {}
     };
+    const onLoadedData = () => setVideoReady(true);
     const onErr = () => setVideoMissing(true);
     v.addEventListener("loadedmetadata", onMeta);
+    v.addEventListener("loadeddata", onLoadedData);
     v.addEventListener("error", onErr);
     if (v.readyState >= 1) onMeta();
+    // Cold-cache nudge: kick off the network fetch immediately on first mount,
+    // even if the browser would otherwise wait for an interaction.
+    try {
+      v.load();
+    } catch {}
     return () => {
       v.removeEventListener("loadedmetadata", onMeta);
+      v.removeEventListener("loadeddata", onLoadedData);
       v.removeEventListener("error", onErr);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
@@ -112,6 +120,7 @@ export function Hero() {
         <video
           ref={videoRef}
           src="/hero/hero-scrub.mp4"
+          poster="/hero/hero-poster.jpg"
           muted
           playsInline
           preload="auto"
@@ -179,13 +188,13 @@ export function Hero() {
               className="max-w-[1400px] mx-auto w-full"
             >
               <span
-                className="inline-flex items-center gap-2.5 rounded-full border border-[var(--color-cream-light)]/25 bg-[rgba(33,42,28,0.45)] backdrop-blur-md pl-3 pr-4 py-1.5 text-[12.5px] tracking-[0.14em] uppercase font-medium text-[var(--color-cream-light)]"
+                className="hidden sm:inline-flex items-center gap-2.5 rounded-full border border-[var(--color-cream-light)]/25 bg-[rgba(33,42,28,0.45)] backdrop-blur-md pl-3 pr-4 py-1.5 text-[12.5px] tracking-[0.14em] uppercase font-medium text-[var(--color-cream-light)]"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-cream-light)]" />
                 Westbahnstraße 31  ·  Landau i. d. Pfalz
               </span>
               <h1
-                className="font-display mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.92] tracking-[-0.03em] text-[var(--color-cream-light)]"
+                className="font-display sm:mt-6 text-[clamp(3rem,12vw,8.5rem)] leading-[0.92] tracking-[-0.03em] text-[var(--color-cream-light)]"
                 style={{ textShadow: "0 2px 28px rgba(20,28,16,0.45)" }}
               >
                 Sage. Slow.
@@ -196,7 +205,7 @@ export function Hero() {
 
             <motion.div
               style={{ y: subY, opacity: ctaOpacity }}
-              className="max-w-[1400px] mx-auto w-full mt-9 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
+              className="max-w-[1400px] mx-auto w-full mt-9 hidden sm:flex sm:flex-row sm:items-end sm:justify-between gap-6"
             >
               <p
                 className="max-w-[38ch] text-[var(--color-cream-light)]/90 text-base sm:text-lg leading-relaxed"
@@ -232,7 +241,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.8 }}
             style={{ opacity: ctaOpacity }}
-            className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--color-cream-light)]/70"
+            className="absolute bottom-7 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 text-[var(--color-cream-light)]/70"
           >
             <span className="eyebrow">scroll</span>
             <motion.span
