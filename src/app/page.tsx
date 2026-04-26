@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  ImageIcon,
   Clock,
   Leaf,
   MapPin,
@@ -310,6 +311,51 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* EINBLICKE — gallery */}
+      <section
+        id="einblicke"
+        className="bg-[var(--color-cream-paper)] py-28 md:py-36"
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+          <Reveal>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-14">
+              <div>
+                <span className="eyebrow text-[var(--color-matcha-deep)]/80">
+                  Einblicke
+                </span>
+                <h2 className="font-display text-[clamp(2.4rem,5vw,4.5rem)] mt-4 leading-[0.95] tracking-[-0.02em] max-w-[16ch]">
+                  Ein Blick durch
+                  <span className="italic font-light"> unser </span>
+                  Fenster.
+                </h2>
+              </div>
+              <p className="max-w-[42ch] text-[var(--color-ink-soft)] leading-relaxed">
+                Vom Matcha am Morgen bis zum letzten Çay. Kleine Momente aus dem
+                Liva — Tisch, Tafel, Hände, Licht.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-12 auto-rows-[120px] sm:auto-rows-[140px] md:auto-rows-[160px] gap-4 md:gap-6">
+            <Reveal className="col-span-12 sm:col-span-8 row-span-3">
+              <GalleryTile caption="Liva-Brett, frühmorgens" tone="sage" />
+            </Reveal>
+            <Reveal delay={0.05} className="col-span-6 sm:col-span-4 row-span-2">
+              <GalleryTile caption="Matcha aus Uji" tone="deep" />
+            </Reveal>
+            <Reveal delay={0.1} className="col-span-6 sm:col-span-4 row-span-2">
+              <GalleryTile caption="Westbahnstraße 31" tone="cream" />
+            </Reveal>
+            <Reveal delay={0.15} className="col-span-6 sm:col-span-4 row-span-2">
+              <GalleryTile caption="Künefe, frisch aus dem Ofen" tone="sage" />
+            </Reveal>
+            <Reveal delay={0.2} className="col-span-6 sm:col-span-4 row-span-3">
+              <GalleryTile caption="Türk Kahvesi im Sand" tone="deep" />
+            </Reveal>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
@@ -333,6 +379,50 @@ function Tile({
         <div className="font-display text-2xl tracking-tight mt-3 text-[var(--color-ink)]">
           {value}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function GalleryTile({
+  caption,
+  tone,
+}: {
+  caption: string;
+  tone: "deep" | "sage" | "cream";
+}) {
+  const surface =
+    tone === "deep"
+      ? "bg-[var(--color-matcha-deep)] text-[var(--color-cream-light)]"
+      : tone === "sage"
+        ? "bg-[var(--color-matcha-soft)]/45 text-[var(--color-ink)]"
+        : "bg-[var(--color-cream)] text-[var(--color-ink)]";
+
+  const iconTone =
+    tone === "deep"
+      ? "text-[var(--color-cream-light)]/45"
+      : "text-[var(--color-matcha-deep)]/45";
+
+  const captionTone =
+    tone === "deep"
+      ? "text-[var(--color-cream-light)]/70"
+      : "text-[var(--color-ink-soft)]";
+
+  return (
+    <div className="rounded-[2rem] p-1.5 bg-[var(--color-matcha-deep)]/10 border border-[var(--color-hairline)] h-full">
+      <div
+        className={`rad-core h-full w-full inset-hi diffuse relative overflow-hidden flex items-end p-6 ${surface}`}
+      >
+        <ImageIcon
+          size={28}
+          weight="thin"
+          className={`absolute top-6 left-6 ${iconTone}`}
+        />
+        <span
+          className={`font-mono text-[10.5px] tracking-[0.22em] uppercase ${captionTone}`}
+        >
+          {caption}
+        </span>
       </div>
     </div>
   );
