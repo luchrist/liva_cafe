@@ -102,7 +102,15 @@ export function Footer() {
         </div>
 
         <div className="mt-20 pt-8 border-t border-[var(--color-cream-light)]/12 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[12px] text-[var(--color-cream-light)]/55">
-          <span>© {new Date().getFullYear()} Liva Cafe · Landau in der Pfalz</span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-1.5">
+            <span>© {new Date().getFullYear()} Liva Cafe · Landau in der Pfalz</span>
+            <a
+              href="mailto:hey@apointa.org"
+              className="hover:text-[var(--color-cream-light)]"
+            >
+              Erstellt von Luca Christ
+            </a>
+          </div>
           <div className="flex items-center gap-6">
             <Link href="/impressum" className="hover:text-[var(--color-cream-light)]">Impressum</Link>
             <Link href="/datenschutz" className="hover:text-[var(--color-cream-light)]">Datenschutz</Link>
